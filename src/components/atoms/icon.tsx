@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { HiChartBar } from "react-icons/hi";
+import { FiTarget, FiBarChart, FiCreditCard, FiPlus } from "react-icons/fi";
 
-export type IconName = "chart-bar";
+export type IconName = "chart-bar" | "goal" | "credit-card" | "plus";
 
 export type IconProps = {
   name: IconName;
@@ -11,7 +11,10 @@ export type IconProps = {
 
 export function Icon(props: IconProps) {
   const mapper: { [key in IconName]: ReactNode } = {
-    "chart-bar": <HiChartBar {...props} />,
+    "chart-bar": <FiBarChart {...props} />,
+    goal: <FiTarget {...props} />,
+    "credit-card": <FiCreditCard {...props} />,
+    plus: <FiPlus {...props} />,
   };
 
   return mapper[props.name];

@@ -1,25 +1,25 @@
 import clsx from "clsx";
-import { Icon } from "../atoms/icon";
+import { Icon, IconName } from "../atoms/icon";
 
 export type MenuItemProps = {
   selected?: boolean;
   text: string;
+  iconName: IconName;
 };
 
 export function MenuItem(props: MenuItemProps) {
   return (
     <a
       className={clsx(
-        "flex transition-all items-center text-gray-500 gap-2 rounded-md font-semibold py-2 px-4",
+        "flex transition-all items-center rounded-md pl-6 text-card-foreground gap-2 font-semibold py-3 px-4",
         {
-          "border-green-300 border-x border-y text-gray-950 bg-green-50":
-            props.selected,
-          "hover:bg-green-50": !props.selected,
+          "text-primary-foreground bg-primary": props.selected,
+          "hover:opacity-70": !props.selected,
         }
       )}
       href="#"
     >
-      <Icon name="chart-bar" />
+      <Icon size={20} name={props.iconName} />
       {props.text}
     </a>
   );

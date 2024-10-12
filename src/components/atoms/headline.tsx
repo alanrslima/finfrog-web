@@ -1,14 +1,17 @@
 import React from "react";
 
-export function Headline() {
+export type HeadlineProps = {
+  title: string;
+  description?: string;
+};
+
+export function Headline(props: HeadlineProps) {
   return (
     <div>
       <h1 className="text-card-foreground font-semibold text-2xl">
-        Hello, Robert
+        {props.title}
       </h1>
-      <span className="text-secondary-foreground">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit
-      </span>
+      <span className="text-secondary-foreground">{props.description}</span>
     </div>
   );
 }
