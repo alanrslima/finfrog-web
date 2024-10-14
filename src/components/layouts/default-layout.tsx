@@ -4,6 +4,7 @@ import { Header } from "../molecules/header";
 
 type DefaultLayoutProps = {
   children: ReactNode;
+  showTransactionForm?: boolean;
 };
 
 export function DefaultLayout(props: DefaultLayoutProps) {
@@ -12,7 +13,7 @@ export function DefaultLayout(props: DefaultLayoutProps) {
       <div className="flex flex-1">
         <NavBar />
         <div className="flex-1 bg-background overflow-y-scroll">
-          <Header />
+          <Header showTransactionForm={props.showTransactionForm} />
           <main className="w-full p-6 max-w-[1280px] mx-auto">
             {props.children}
           </main>

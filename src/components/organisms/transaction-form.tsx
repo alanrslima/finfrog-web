@@ -24,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { cn } from "@/app/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
+import { handleCreateTransaction } from "./transaction-form-action";
 
 const formSchema = z.object({
   value: z.string(),
@@ -50,9 +51,34 @@ export function TransactionForm(props: TransactionFormProps) {
     },
   });
 
+  // async function handleCreateTransaction(formData: FormData) {
+  //   "use server";
+
+  //   const token = cookies().get("FROG_TOKEN")?.value;
+  //   await fetch("http://localhost:3000/api/transaction", {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //     body: JSON.stringify({
+  //       value: formData.get("value"),
+  //       name: formData.get("description"),
+  //       accountId: "85441376-530d-4e15-ae84-69fe906f6841",
+  //       date: formData.get("date"),
+  //     }),
+  //   });
+  //   revalidateTag("get-transactions");
+  // }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(props.onSubmit)} className="space-y-8">
+      <form
+        action={handleCreateTransaction}
+        // onSubmit={form.handleSubmit(props.onSubmit)}
+        className="space-y-8"
+      >
         <div className="flex gap-4">
           <FormField
             control={form.control}

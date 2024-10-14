@@ -14,16 +14,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { signInEmailPassword } from "../../services/auth/signin-email-password";
-import { cookies } from "next/headers";
-import { useActionState, useTransition } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { authenticate } from "../lib/actions";
-import { useFormState } from "react-dom";
-import { Cookies } from "../lib/cookies";
 import { useErrorHandler } from "@/hooks/use-error-handler";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { AuthCookies } from "../lib/auth-cookies";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -33,17 +26,6 @@ const formSchema = z.object({
 export function SignInForm() {
   const router = useRouter();
 
-  // const [errorMessage, formAction, isPending] = useFormState(
-  //   authenticate,
-  //   undefined
-  // );
-  // const [errorMessage, formAction, isPending] = useActionState(
-  //   authenticate,
-  //   undefined
-  // );
-
-  // const { pending } = useFormStatus();
-  // const [isPending, startTransition] = useTransition();
   const [errorHandler] = useErrorHandler();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,9 +39,8 @@ export function SignInForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await signInEmailPassword(values);
-      const cookies = new Cookies();
-      cookies.set("TESTE_TOKEN", response.token, 2);
-
+      const authCookies = new AuthCookies();
+      authCookies.setToken(response.token);
       router.push("/transactions");
     } catch (error) {
       errorHandler(error);
