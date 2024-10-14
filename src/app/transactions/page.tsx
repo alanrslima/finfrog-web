@@ -20,18 +20,21 @@ import { Headline } from "@/components/atoms/headline";
 import { Card } from "@/components/molecules/card";
 import { Stat, StatGroup } from "@/components/molecules/stat";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { Transaction } from "@/types/transaction";
+import { Cookies } from "../lib/cookies";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  category: string;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
+// type Payment = {
+//   id: string;
+//   amount: number;
+//   category: string;
+//   status: "pending" | "processing" | "success" | "failed";
+//   email: string;
+// };
 
-export const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<Transaction>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -56,40 +59,51 @@ export const columns: ColumnDef<Payment>[] = [
   },
 
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: "Description",
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("date")).toLocaleString();
+      return <div>{date}</div>;
     },
   },
   {
-    accessorKey: "category",
-    header: "Category",
-    cell: ({ row }) => {
-      return <Badge>{row.getValue("category")}</Badge>;
-    },
+    accessorKey: "account.name",
+    header: "Account",
   },
+  // {
+  //   accessorKey: "email",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Email
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
+  // {
+  //   accessorKey: "category",
+  //   header: "Category",
+  //   cell: ({ row }) => {
+  //     return <Badge>{row.getValue("category")}</Badge>;
+  //   },
+  // },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "value",
+    header: () => <div className="text-right">Value</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
+      const value = parseFloat(row.getValue("value"));
+      const formatted = new Intl.NumberFormat("pt-BR", {
         style: "currency",
-        currency: "USD",
-      }).format(amount);
-
+        currency: "BRL",
+      }).format(value);
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
@@ -123,25 +137,40 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export const payments: Payment[] = [
-  {
-    id: "728ed52f",
-    amount: 100,
-    status: "pending",
-    category: "Food",
-    email: "m@example.com",
-  },
-  {
-    id: "489e1d42",
-    amount: 125,
-    category: "Food",
-    status: "processing",
-    email: "example@gmail.com",
-  },
-  // ...
-];
+// const payments: Payment[] = [
+//   {
+//     id: "728ed52f",
+//     amount: 100,
+//     status: "pending",
+//     category: "Food",
+//     email: "m@example.com",
+//   },
+//   {
+//     id: "489e1d42",
+//     amount: 125,
+//     category: "Food",
+//     status: "processing",
+//     email: "example@gmail.com",
+//   },
+//   // ...
+// ];
 
 export default function Tramsactions() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      const cookies = new Cookies();
+      const token = cookies.get("TESTE_TOKEN");
+      let res = await fetch("http://localhost:3000/api/transaction", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      let data = await res.json();
+      setTransactions(data.data);
+    }
+    fetchPosts();
+  }, []);
+
   return (
     <DefaultLayout>
       <div className="flex flex-col gap-4">
@@ -155,8 +184,7 @@ export default function Tramsactions() {
             title="Transações"
             description="Acompanhe suas últimas transações"
           />
-
-          <DataTable columns={columns} data={payments} />
+          <DataTable columns={columns} data={transactions} />
         </Card>
       </div>
     </DefaultLayout>

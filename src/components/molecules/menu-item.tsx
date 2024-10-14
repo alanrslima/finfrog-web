@@ -11,7 +11,7 @@ export function MenuItem(props: MenuItemProps) {
   return (
     <a
       className={clsx(
-        "flex transition-all text-sm items-center rounded-md pl-6 text-card-foreground gap-2 font-medium py-3 px-4",
+        "flex transition-all text-sm items-center rounded-md pl-6 text-card-foreground gap-2 font-bold py-3 px-4",
         {
           "text-primary-foreground bg-primary": props.selected,
           "hover:opacity-70": !props.selected,

@@ -21,12 +21,12 @@ export type StatProps = {
 
 export const Stat = (props: StatProps) => {
   return (
-    <div className="flex p-4 items-center gap-4">
+    <div className="flex p-4 items-center flex-1 gap-4">
       <div className="bg-accent px-6 py-3 rounded-lg">
         <Icon name="chart-bar" size={24} />
       </div>
       <div className="flex flex-col">
-        <span>Total authorized shares</span>
+        <span className="text-sm">Total authorized shares</span>
         <strong className="text-xl">R$ 405,00</strong>
       </div>
     </div>

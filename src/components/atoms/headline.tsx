@@ -11,7 +11,9 @@ export function Headline(props: HeadlineProps) {
       <h1 className="text-card-foreground font-semibold text-2xl">
         {props.title}
       </h1>
-      <span className="text-secondary-foreground">{props.description}</span>
+      <span className="text-secondary-foreground text-sm">
+        {props.description}
+      </span>
     </div>
   );
 }

@@ -26,7 +26,7 @@ import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 
 const formSchema = z.object({
-  value: z.number(),
+  value: z.string(),
   description: z.string().min(2).max(50),
   account: z.string().min(2).max(50),
   date: z.date({
@@ -34,24 +34,25 @@ const formSchema = z.object({
   }),
 });
 
-export function TransactionForm() {
+type TransactionFormProps = {
+  onSubmit: (values: TransactionFormSubmitProps) => Promise<void>;
+};
+
+export type TransactionFormSubmitProps = z.infer<typeof formSchema>;
+
+export function TransactionForm(props: TransactionFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: "",
       date: new Date(),
+      value: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(props.onSubmit)} className="space-y-8">
         <div className="flex gap-4">
           <FormField
             control={form.control}
@@ -157,7 +158,13 @@ export function TransactionForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          className="font-bold"
+          isLoading={form.formState.isSubmitting}
+          type="submit"
+        >
+          Submit
+        </Button>
       </form>
     </Form>
   );
