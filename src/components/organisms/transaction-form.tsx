@@ -21,7 +21,7 @@ import {
 } from "../ui/select";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 
