@@ -21,10 +21,12 @@ import {
 } from "../ui/select";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "@/app/lib/utils";
+import { cn, objectToFormData } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
-import { handleCreateTransaction } from "./transaction-form-action";
+import { onSubmitTransactionAction } from "./transaction-form-action";
+import { useToast } from "@/hooks/use-toast";
+import { useFormState } from "react-dom";
 
 const formSchema = z.object({
   value: z.string(),
@@ -35,13 +37,17 @@ const formSchema = z.object({
   }),
 });
 
-type TransactionFormProps = {
-  onSubmit: (values: TransactionFormSubmitProps) => Promise<void>;
-};
+export type FormState = { message: string };
 
 export type TransactionFormSubmitProps = z.infer<typeof formSchema>;
 
-export function TransactionForm(props: TransactionFormProps) {
+export function TransactionForm() {
+  // const formRef = useRef<HTMLFormElement>(null);
+  const { toast } = useToast();
+  const [state, formAction] = useFormState(onSubmitTransactionAction, {
+    message: "",
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,32 +57,25 @@ export function TransactionForm(props: TransactionFormProps) {
     },
   });
 
-  // async function handleCreateTransaction(formData: FormData) {
-  //   "use server";
-
-  //   const token = cookies().get("FROG_TOKEN")?.value;
-  //   await fetch("http://localhost:3000/api/transaction", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //     body: JSON.stringify({
-  //       value: formData.get("value"),
-  //       name: formData.get("description"),
-  //       accountId: "85441376-530d-4e15-ae84-69fe906f6841",
-  //       date: formData.get("date"),
-  //     }),
+  // async function onSubmit(data: z.output<typeof formSchema>) {
+  //   const formData = objectToFormData(data);
+  //   await handleCreateTransaction(formData);
+  //   toast({
+  //     title: "Great job!",
+  //     description: "Your transaction has been  succesfuly registered",
   //   });
-  //   revalidateTag("get-transactions");
   // }
 
   return (
     <Form {...form}>
       <form
-        action={handleCreateTransaction}
-        // onSubmit={form.handleSubmit(props.onSubmit)}
+        action={formAction}
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          form.handleSubmit((data) => {
+            formAction(objectToFormData(data));
+          })(evt);
+        }}
         className="space-y-8"
       >
         <div className="flex gap-4">

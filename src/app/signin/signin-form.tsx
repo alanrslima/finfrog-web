@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { signInEmailPassword } from "../../services/auth/signin-email-password";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { useRouter } from "next/navigation";
-import { AuthCookies } from "../lib/auth-cookies";
+import { AuthCookies } from "../../lib/auth-cookies";
 
 const formSchema = z.object({
   email: z.string().email(),

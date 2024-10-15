@@ -1,4 +1,4 @@
-import { Cookies } from "@/app/lib/cookies";
+import { Cookies } from "@/lib/cookies";
 import { ServiceError } from "../service-error";
 
 type CreateTransactionInput = {

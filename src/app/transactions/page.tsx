@@ -1,17 +1,13 @@
 "use server";
 
 import { DefaultLayout } from "@/components/layouts/default-layout";
-import { DataTable } from "@/components/organisms/data-table";
 import { Headline } from "@/components/atoms/headline";
 import { Card } from "@/components/molecules/card";
 import { Stat, StatGroup } from "@/components/molecules/stat";
-import { useEffect, useState } from "react";
 import { Transaction } from "@/types/transaction";
-
-import { columns } from "./columns";
-import { FetchHttpClient } from "@/services/api/fetch-http-client";
 import { cookies } from "next/headers";
 import { PageProps } from "@/types/page";
+import { TransactionsTable } from "./transactions-table";
 
 export default async function Transactions(props: PageProps) {
   const showTransactionForm = props.searchParams["show-transaction-form"]
@@ -53,13 +49,7 @@ export default async function Transactions(props: PageProps) {
             title="Transações"
             description="Acompanhe suas últimas transações"
           />
-          <ul>
-            {transactions?.map((transaction) => (
-              <li key={transaction.id}>
-                {transaction.name} - {transaction.value}
-              </li>
-            ))}
-          </ul>
+          <TransactionsTable transactions={transactions} />
           {/* <DataTable columns={columns} data={transactions} /> */}
         </Card>
       </div>

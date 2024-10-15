@@ -1,4 +1,4 @@
-import { AuthCookies } from "@/app/lib/auth-cookies";
+import { AuthCookies } from "@/lib/auth-cookies";
 import { HttpClient } from "./http-client";
 
 export class FetchHttpClient implements HttpClient {

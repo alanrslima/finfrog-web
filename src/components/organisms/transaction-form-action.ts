@@ -1,10 +1,21 @@
+/**
+ * In cases of doubts, check it out this repo https://github.com/ProNextJS/forms-management-yt/tree/main
+ */
+
 "use server";
 
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { FormState } from "./transaction-form";
 
-export async function handleCreateTransaction(formData: FormData) {
+export async function onSubmitTransactionAction(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const response = Object.fromEntries(formData);
+
+  console.log(prevState, formData, response);
   const token = cookies().get("FROG_TOKEN")?.value;
   await fetch("http://localhost:3000/api/transaction", {
     method: "POST",
